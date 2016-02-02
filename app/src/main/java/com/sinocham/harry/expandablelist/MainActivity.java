@@ -75,45 +75,26 @@ public class MainActivity extends Activity {
 
         expListView = (ExpandableListView) findViewById(R.id.lvExp);
 
-        try {
-            session.connect("tcp://" + Constant.ROBOT_J + ":9559").sync(1000, TimeUnit.MILLISECONDS);
-            alBehaviorManager = new ALBehaviorManager(session);
-            alAnimatedSpeech = new ALAnimatedSpeech(session);
-            alAudioDevice = new ALAudioDevice(session);
-            alRobotPosture = new ALRobotPosture(session);
-            alMotion = new ALMotion(session);
-            alTextToSpeech = new ALTextToSpeech(session);
-            alTextToSpeech.setLanguage("English");
-            try {
-                alRobotPosture.goToPosture("Stand", 0.5f);
-                alTextToSpeech.say("Hello");
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-        startPollingThread();
+//        startPollingThread();
         // preparing list data
         sitBtn.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 try {
-                     alMotion.rest();
-                 } catch (CallError callError) {
-                     callError.printStackTrace();
-                 } catch (InterruptedException e) {
-                     e.printStackTrace();
-                 }
-             }
-         });
+            @Override
+            public void onClick(View v) {
+                try {
+                    alMotion.rest();
+                } catch (CallError callError) {
+                    callError.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         standBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    alRobotPosture.goToPosture("Stand",0.5f);
+                    alRobotPosture.goToPosture("Stand", 0.5f);
                 } catch (CallError callError) {
                     callError.printStackTrace();
                 } catch (InterruptedException e) {
@@ -125,13 +106,15 @@ public class MainActivity extends Activity {
         softerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(session.isConnected()){
-                    try{
+                if (session.isConnected()) {
+                    try {
                         int vol = alAudioDevice.getOutputVolume();
-                        vol-=10f;
-                        if(vol<=0){vol=0;}
+                        vol -= 10f;
+                        if (vol <= 0) {
+                            vol = 0;
+                        }
                         alAudioDevice.setOutputVolume(vol);
-                        Toast.makeText(getApplicationContext(),(vol), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), String.valueOf(vol), Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -141,13 +124,15 @@ public class MainActivity extends Activity {
         louderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(session.isConnected()){
-                    try{
+                if (session.isConnected()) {
+                    try {
                         int vol = alAudioDevice.getOutputVolume();
-                        vol+=10f;
-                        if(vol>=100){vol=100;}
+                        vol += 10f;
+                        if (vol >= 100) {
+                            vol = 100;
+                        }
                         alAudioDevice.setOutputVolume(vol);
-                        Toast.makeText(getApplicationContext(),(vol), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), String.valueOf(vol), Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -184,14 +169,10 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 try {
                     session.close();
-//                    session.onDisconnected("testOnDisconnect");
                     session.connect("tcp://" + iptext.getText() + ":9559").sync(1000, TimeUnit.MILLISECONDS);
-                    alBehaviorManager = new ALBehaviorManager(session);
-                    alAnimatedSpeech = new ALAnimatedSpeech(session);
-                    alMotion = new ALMotion(session);
-                    alTextToSpeech = new ALTextToSpeech(session);
-                    alTextToSpeech.setLanguage("CantoneseHK");
-                    startPollingThread();
+
+
+//                    startPollingThread();
                 } catch (Exception e) {
                     e.printStackTrace();
 
@@ -201,11 +182,24 @@ public class MainActivity extends Activity {
                             .show();
                 }
                 try {
+                    alBehaviorManager = new ALBehaviorManager(session);
+                    alAnimatedSpeech = new ALAnimatedSpeech(session);
+
+                    alTextToSpeech = new ALTextToSpeech(session);
+                    alTextToSpeech.setLanguage("English");
                     alTextToSpeech.say("Hello");
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                try {
+                    alAudioDevice = new ALAudioDevice(session);
+                    alRobotPosture = new ALRobotPosture(session);
+                    alMotion = new ALMotion(session);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         });
 
@@ -362,7 +356,7 @@ public class MainActivity extends Activity {
                 List<String> fun = new ArrayList<String>();
 
                 for (int i = 0; i < Constant.jokes.length; i++) {
-                    fun.add((i+1)+". "+Application.speech.get(0).get(lang)[i]);
+                    fun.add((i + 1) + ". " + Application.speech.get(0).get(lang)[i]);
                 }
                 List<String> edu = new ArrayList<String>();
                 for (int i = 0; i < Constant.educations.length; i++) {
@@ -451,20 +445,20 @@ public class MainActivity extends Activity {
             }
         });
     }
-
-    public void startPollingThread() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    if (!session.isConnected()) {
-
-                        break;
-                    }
-                }
-            }
-        }).start();
-    }
+//
+//    public void startPollingThread() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                while (true) {
+//                    if (!session.isConnected()) {
+//
+//                        break;
+//                    }
+//                }
+//            }
+//        }).start();
+//    }
 
     public void sayDisconnected() {
         Toast.makeText(
