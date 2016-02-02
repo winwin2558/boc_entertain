@@ -58,6 +58,9 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //adding comment
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final Button langBtn = (Button) findViewById(R.id.langBtn);
